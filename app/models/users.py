@@ -6,4 +6,4 @@ class User(SQLModel, table=True):
     nombre: str
     email: str
     contraseña_hash: str
-    rol: str = "user"  # por defecto
+    rol: str = "user"  

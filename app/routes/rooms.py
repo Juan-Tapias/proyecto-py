@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
 from verificar_administracion import admin_required
-from users_verification import get_current_user
 from sqlmodel import Session
 from models.database import get_db
 from controllers.room_controllers import get_room, create_room, delete_room, update_room
