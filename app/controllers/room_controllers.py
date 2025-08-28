@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from models.room import Room
+from ..models.room import Room
 
 def create_room(db: Session, room: Room):
     db.add(room)

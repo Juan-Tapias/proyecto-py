@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from models.users import User
+from ..models.users import User
 
 def create_users(db: Session, user: User):
     db.add(user)

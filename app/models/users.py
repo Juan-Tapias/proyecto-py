@@ -7,3 +7,9 @@ class User(SQLModel, table=True):
     email: str
     contraseña_hash: str
     rol: str = "user"  
+
+class UserCreate(SQLModel):
+    nombre: str
+    email: str
+    password: str 
+    rol: str = "user"
