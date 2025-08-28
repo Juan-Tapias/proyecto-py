@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import Session, select
-from ..auth.registre import hash_password
+from ..auth.validar_password import hash_password
 from ..models.users import UserCreate, User
 from ..models.database import get_db
 
@@ -8,13 +8,13 @@ router = APIRouter()
 
 @router.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    existe = select(User).WHERE(User.email == user.email)
+    existe = select(User).where(User.email == user.email)
 
     result = db.exec(existe).first()
     if result:
         raise HTTPException(status_code=400, detail="El usuario ya existe")
 
-    password_hash = hash_password(UserCreate.password)
+    password_hash = hash_password(user.password)
 
     new_user = User(
         nombre = user.nombre,

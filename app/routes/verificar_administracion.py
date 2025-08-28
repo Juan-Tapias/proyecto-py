@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
 
-
 def get_admin_user():
     return {"nombre": "Juan", "rol": "admin"}
 

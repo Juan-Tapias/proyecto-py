@@ -7,4 +7,3 @@ def hash_password(password: str):
 
 def verify_password(password: str, hashed:str) -> bool:
     return password_context.verify(password, hashed)
-
