@@ -7,7 +7,7 @@ from ..auth.dependencias import get_current_user
 
 router = APIRouter(tags=["Reservation"])
 
-@router.post("/")
+@router.post("/create-reservation")
 def create_reservations(reservation: Reservation, db: Session = Depends(get_current_user)):
     return create_reservation(db, reservation)
 
