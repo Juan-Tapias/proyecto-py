@@ -1,10 +1,42 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException
+from datetime import datetime, timedelta
 from sqlmodel import Session
 from ..models.reservation import Reservation, ReservationCreate
 from datetime import date
 from ..models.database import get_db
 
 def create_reservation(reservation: ReservationCreate, db: Session = Depends(get_db)):
+
+    hora_inicio = datetime.strptime(reservation.hora_inicio, "%H:%M")
+    hora_fin = datetime.strptime(reservation.hora_fin, "%H:%M")
+
+
+    if hora_fin - hora_inicio != timedelta(hours=1):
+        raise HTTPException(
+            status_code=400,
+            detail="Las reservas deben ser de bloques de 1 hora exacta."
+        )
+
+    hora = db.quey(Reservation).filter(
+        Reservation.room_id == reservation.room_id,
+        Reservation.fecha == reservation.fecha,
+        Reservation.hora_inicio < reservation.hora_fin,  
+        Reservation.hora_fin > reservation.hora_inicio
+    ).first()
+
+    if hora:
+        raise HTTPException(
+            status_code=400,
+            detail="Ya existe una reserva en este horario para esta sala."
+        )
+
+    if not all([reservation.usuario_id, reservation.room_id, reservation.fecha,
+                reservation.hora_inicio, reservation.hora_fin, reservation.estado]):
+        raise HTTPException(
+            status_code=400,
+            detail="Todos los campos son obligatorios y no pueden ser nulos."
+        )
+
     new_reservation = Reservation(
         usuario_id=reservation.usuario_id,
         room_id=reservation.room_id,
@@ -26,13 +58,13 @@ def get_reservation_by_id(reservation_id:int, db: Session  = Depends(get_db)):
     return db.query(Reservation).filter(Reservation.id == reservation_id).first()
 
 def get_reservation_by_user(user_id:int, db: Session  = Depends(get_db)):
-    return db.query(Reservation).filter(Reservation.usuario_id == user_id)
+    return db.query(Reservation).filter(Reservation.usuario_id == user_id).all()
 
 def get_reservation_by_room(room_id:int, db: Session  = Depends(get_db)):
     return db.query(Reservation).filter(Reservation.room_id == room_id).first()
 
 def get_reservation_by_date(date:date, db: Session  = Depends(get_db)):
-    return db.query(Reservation).filter(Reservation.fecha == date)
+    return db.query(Reservation).filter(Reservation.fecha == date).all()
 
 def cancel_reservation (reservation_id:int, db: Session  = Depends(get_db)):
     reservation = db.query(Reservation).filter(Reservation.id == reservation_id).first()

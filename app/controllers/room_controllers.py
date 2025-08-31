@@ -1,7 +1,16 @@
+from fastapi import HTTPException
 from sqlmodel import Session
 from ..models.room import Room
 
 def create_room(db: Session, room: Room):
+
+    if not all([room.usuario_id, room.room_id, room.fecha,
+            room.hora_inicio, room.hora_fin, room.estado]):
+        raise HTTPException(
+            status_code=400,
+            detail="Todos los campos son obligatorios y no pueden ser nulos."
+        )
+    
     new_room = Room(
         nombre= room.nombre,
         sede= room.sede,
