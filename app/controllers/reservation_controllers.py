@@ -1,14 +1,23 @@
 from fastapi import Depends
 from sqlmodel import Session
-from ..models.reservation import Reservation
+from ..models.reservation import Reservation, ReservationCreate
 from datetime import date
 from ..models.database import get_db
 
-def create_reservation(db: Session, reservation: Reservation):
-    db.add(reservation)
+def create_reservation(reservation: ReservationCreate, db: Session = Depends(get_db)):
+    new_reservation = Reservation(
+        usuario_id=reservation.usuario_id,
+        room_id=reservation.room_id,
+        fecha=reservation.fecha,
+        hora_inicio=reservation.hora_inicio,
+        hora_fin=reservation.hora_fin,
+        estado=reservation.estado
+        )
+    
+    db.add(new_reservation)
     db.commit()
-    db.refresh(reservation)
-    return reservation
+    db.refresh(new_reservation)
+    return {"msg": "Reservacion registrada con éxito", "reservation_id": new_reservation.id}
 
 def get_reservation(db: Session = Depends(get_db)):
     return db.query(Reservation).all()
