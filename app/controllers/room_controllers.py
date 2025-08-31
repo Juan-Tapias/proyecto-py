@@ -2,11 +2,17 @@ from sqlmodel import Session
 from ..models.room import Room
 
 def create_room(db: Session, room: Room):
-    db.add(room)
+    new_room = Room(
+        nombre= room.nombre,
+        sede= room.sede,
+        capacidad= room.capacidad,
+        recursos= room.recursos
+    )
+    db.add(new_room)
     db.commit()
-    db.refresh(room)
-    return room
+    db.refresh(new_room)
 
+    return {"msg": "Habitacion registrada con éxito", "room_id": new_room.id}
 def get_room(db: Session):
     return db.query(Room).all()
 

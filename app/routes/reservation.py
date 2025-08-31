@@ -3,7 +3,7 @@ from sqlmodel import Session
 from ..controllers.reservation_controllers import create_reservation, get_reservation_by_user, get_reservation_by_room, get_reservation_by_date, cancel_reservation
 from ..models.reservation import Reservation
 from datetime import date
-from .users_verification import get_current_user
+from ..auth.dependencias import get_current_user
 
 router = APIRouter(tags=["Reservation"])
 
@@ -11,7 +11,7 @@ router = APIRouter(tags=["Reservation"])
 def create_reservations(reservation: Reservation, db: Session = Depends(get_current_user)):
     return create_reservation(db, reservation)
 
-@router.get("/me/{user_id}")
+@router.get("/me")
 def get_my_room(user_id: int, db: Session = Depends(get_current_user)) :
     return get_reservation_by_user(db, user_id)
 

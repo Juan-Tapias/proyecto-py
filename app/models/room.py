@@ -7,3 +7,9 @@ class Room(SQLModel, table=True):
     sede: str
     capacidad: int
     recursos: str
+
+class RoomCreate(SQLModel):
+    nombre: str
+    sede: str
+    capacidad: int 
+    recursos: str

@@ -1,11 +1,10 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import HTTPException, Depends
+from ..auth.dependencias import get_current_user
 
-def get_admin_user():
-    return {"nombre": "Juan", "rol": "admin"}
+def admin_required(user = Depends(get_current_user)):
+    if user["rol"].lower() != "admin":
+        raise HTTPException(status_code=403, detail="No tienes permisos de administrador")
+    return user
 
 
-def admin_required(usuario: dict = Depends(get_admin_user)):
-    if usuario["rol"] != "admin":
-        raise HTTPException(status_code=403, detail="Se requiere permisos de administrador")
-    return usuario
 
