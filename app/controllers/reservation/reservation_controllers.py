@@ -1,15 +1,15 @@
 from fastapi import Depends, HTTPException
-from datetime import datetime, timedelta
+from datetime import timedelta, date, time
 from sqlmodel import Session
 from ...models.reservation.reservation import Reservation, ReservationCreate
-from datetime import date
 from ...models.database.database import get_db
 
+from datetime import datetime, timedelta
+
 def create_reservation(reservation: ReservationCreate, db: Session = Depends(get_db)):
-
-    hora_inicio = datetime.strptime(reservation.hora_inicio, "%H:%M")
-    hora_fin = datetime.strptime(reservation.hora_fin, "%H:%M")
-
+    base_date = datetime(2000, 1, 1)  
+    hora_inicio = datetime.combine(base_date, reservation.hora_inicio)
+    hora_fin = datetime.combine(base_date, reservation.hora_fin)
 
     if hora_fin - hora_inicio != timedelta(hours=1):
         raise HTTPException(
@@ -17,10 +17,10 @@ def create_reservation(reservation: ReservationCreate, db: Session = Depends(get
             detail="Las reservas deben ser de bloques de 1 hora exacta."
         )
 
-    hora = db.quey(Reservation).filter(
+    hora = db.query(Reservation).filter(
         Reservation.room_id == reservation.room_id,
         Reservation.fecha == reservation.fecha,
-        Reservation.hora_inicio < reservation.hora_fin,  
+        Reservation.hora_inicio < reservation.hora_fin,
         Reservation.hora_fin > reservation.hora_inicio
     ).first()
 
@@ -44,12 +44,13 @@ def create_reservation(reservation: ReservationCreate, db: Session = Depends(get
         hora_inicio=reservation.hora_inicio,
         hora_fin=reservation.hora_fin,
         estado=reservation.estado
-        )
+    )
     
     db.add(new_reservation)
     db.commit()
     db.refresh(new_reservation)
     return {"msg": "Reservacion registrada con éxito", "reservation_id": new_reservation.id}
+
 
 def get_reservation(db: Session = Depends(get_db)):
     return db.query(Reservation).all()
