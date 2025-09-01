@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
-from .verificar_administracion import admin_required
+from ..verification.verificar_administracion import admin_required
 from sqlmodel  import Session
-from ..models.database import get_db
-from ..controllers.users_controllers import get_user, delete_user_by_id
-from ..auth.dependencias import get_current_user
+from ...models.database.database import get_db
+from ...controllers.user.users_controllers import get_user, delete_user_by_id
+from ...auth.dependencias import get_current_user
 
 router = APIRouter(tags=["Users"])
 

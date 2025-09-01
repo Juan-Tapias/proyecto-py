@@ -1,9 +1,9 @@
 from fastapi import Depends, HTTPException
 from datetime import datetime, timedelta
 from sqlmodel import Session
-from ..models.reservation import Reservation, ReservationCreate
+from ...models.reservation.reservation import Reservation, ReservationCreate
 from datetime import date
-from ..models.database import get_db
+from ...models.database.database import get_db
 
 def create_reservation(reservation: ReservationCreate, db: Session = Depends(get_db)):
 

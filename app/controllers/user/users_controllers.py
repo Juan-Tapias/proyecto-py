@@ -1,6 +1,6 @@
 from sqlmodel import Session
 from fastapi import HTTPException
-from ..models.users import User
+from ...models.user.users import User
 
 def create_users(db: Session, user: User):
     if not all([user.usuario_id, user.room_id, user.fecha,

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
-from ..controllers.reservation_controllers import create_reservation, get_reservation_by_user, get_reservation_by_room, get_reservation_by_date, cancel_reservation
-from ..models.reservation import ReservationCreate
+from ...controllers.reservation.reservation_controllers import create_reservation, get_reservation_by_user, get_reservation_by_room, get_reservation_by_date, cancel_reservation
+from ...models.reservation.reservation import ReservationCreate
 from datetime import date
-from ..models.database import get_db
+from ...models.database.database import get_db
 
 router = APIRouter(tags=["Reservation"])
 

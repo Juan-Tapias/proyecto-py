@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
-from .verificar_administracion import admin_required
+from ..verification.verificar_administracion import admin_required
 from sqlmodel import Session
-from ..models.database import get_db
-from ..controllers.room_controllers import get_room, create_room, delete_room, update_room
-from ..models.room import RoomCreate, Room
+from ...models.database.database import get_db
+from ...controllers.room.room_controllers import get_room, create_room, delete_room, update_room
+from ...models.room.room import RoomCreate, Room
 
 router = APIRouter(tags=["Rooms"])
 

@@ -1,5 +1,5 @@
 from fastapi import HTTPException, Depends
-from ..auth.dependencias import get_current_user
+from ...auth.dependencias import get_current_user
 
 def admin_required(user = Depends(get_current_user)):
     if user["rol"].lower() != "admin":

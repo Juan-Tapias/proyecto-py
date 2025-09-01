@@ -1,6 +1,9 @@
 from fastapi import FastAPI
-from app.routes import reservation, rooms, sesion, users
-from .models.database import createDbAndTables
+from app.routes.user import users
+from app.routes.reservation import reservation
+from app.routes.room import rooms
+from app.routes.sesion import sesion
+from .models.database.database import createDbAndTables
 
 app = FastAPI()
 
